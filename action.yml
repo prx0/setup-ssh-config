@@ -1,0 +1,35 @@
+name: 'ssh-config'
+description: 'Setup ssh config to allow some ssh access'
+inputs:
+  private-key:
+    description: 'ssh private key to contact the server with the public key'
+    required: true
+  host:
+    description: 'host for the ssh config file'
+    required: true
+  hostname:
+    description: 'hostname for the ssh config file'
+    required: true
+  user:
+    description: 'user for the ssh config file'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup SSH Keys and known_hosts
+      shell: bash
+      run: |
+        eval $(ssh-agent)
+        mkdir -p ~/.ssh
+
+        cat >> ~/.ssh/config << EOF
+        Host ${{ inputs.host  }}
+          HostName ${{ inputs.hostname  }}
+          User ${{ inputs.user }}
+          IdentityFile ~/.ssh/${{ inputs.host }}
+        EOF
+
+        echo "${{ inputs.private-key }}" > ~/.ssh/${{ inputs.host }}
+        chmod 600 ~/.ssh/${{ inputs.host }}
+        ssh-add ~/.ssh/${{ inputs.host }}
