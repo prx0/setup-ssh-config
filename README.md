@@ -3,7 +3,7 @@ Github action to configure SSH config file
 
 ```yml
     - name: Setup ssh config file 
-      uses: prx0/ssh-config@v1
+      uses: prx0/setup-ssh-config@v1
       with:
         host: [HOST_URL]
         hostname: [HOST_NAME]
